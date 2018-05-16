@@ -81,6 +81,7 @@ You should now have a working bosh director in a new VPC.
 Update your terminal's environment variables that are needed so your environment includes info on the new resources just built.
 
 `direnv allow`  
+Test you are able to connect to your new bosh director.  
 `bosh env`
 .  
 .  
