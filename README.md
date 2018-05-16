@@ -80,7 +80,7 @@ This will build a new VPC, subnets etc.
 You should now have a working bosh director in a new VPC.  
 Update your terminal's environment variables that are needed so your environment includes info on the new resources just built.
 
-`direnv allow`
+`direnv allow`  
 `bosh env`
 .  
 .  
