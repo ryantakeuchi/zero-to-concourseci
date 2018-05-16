@@ -17,7 +17,8 @@ settings.yml
 */vars/jumpbox-state.json
 */vars/jumpbox-vars-file.yml
 */vars/jumpbox-vars-store.yml
-*/**/terraform.tfstate
+*.tfstate
+*.tfstate.backup
 */vars/bbl.tfvars
 */cluster-creds.yml
 .terraform
