@@ -65,11 +65,11 @@ We will be making use of two of these as examples.
 
 ``` bash
 mkdir terraform
+mkdir vars
 cp ../plan-patches/tf-backend-aws/terraform/s3_backend_override.tf terraform/
-cp ../plan-patches/aws-vpc-cidr/aws-vpc-cidr.tfvars terraform/
+cp ../plan-patches/aws-vpc-cidr/aws-vpc-cidr.tfvars vars/
 ```
-
-Be sure to tune these files.  
+**Be sure to tune these files**
 
 ## Prepare an AWS control plane
 
@@ -81,30 +81,32 @@ You should now have a working bosh director in a new VPC.
 Update your terminal's environment variables that are needed so your environment includes info on the new resources just built.
 
 `direnv allow`
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
-.
+`bosh env`
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+.  
+
 ## Pivotal Concourse
 
 We are now ready to deploy a Concourse CI to our director.  
