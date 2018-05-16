@@ -1,6 +1,4 @@
 .envrc
-!artifacts/
-artifacts/*
 bbl-ops-files/
 bosh-deployment/
 cloud-config/
@@ -23,3 +21,4 @@ settings.yml
 */vars/bbl.tfvars
 */cluster-creds.yml
 .terraform
+*.plan
