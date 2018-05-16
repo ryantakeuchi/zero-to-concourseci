@@ -75,7 +75,7 @@ Be sure to tune these files.
 
 This will build a new VPC, subnets etc.  
 
-* `bbl up"`
+* `bbl up`
 
 You should now have a working bosh director in a new VPC.  
 Update your terminal's environment variables that are needed so your environment includes info on the new resources just built.
