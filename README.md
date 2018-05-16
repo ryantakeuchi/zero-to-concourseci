@@ -37,6 +37,8 @@ Tune some names in `setup/terraform_s3_backend/terraform_s3_backend_provision.tf
 ## Create a bbl IAM user
 
 Tune some settings in `setup/iam/terraform_create_iam_users.tf` and then run:
+* `cd setup/iam`
+* `vim terraform_create_iam_users.tf`
 * `terraform init`
 * `terraform plan -out iam.plan`
 * `terraform apply 'iam.plan'`
