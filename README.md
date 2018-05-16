@@ -18,10 +18,11 @@ At the end of this tutorial you should have a control plane consisting of:
 **Linux tested only**
 
 The following should be installed on your local machine:
+
+* [bbl](https://github.com/cloudfoundry/bosh-bootloader/releases)
 * [bosh-cli](https://bosh.io/docs/cli-v2.html)
 * [bosh create-env dependencies](https://bosh.io/docs/cli-v2-install/#additional-dependencies)
 * [terraform](https://www.terraform.io/downloads.html) >= 0.11.0
-* ruby (necessary for bosh create-env)
 * [direnv](https://direnv.net/)
 * an AWS IAM user with admin access
 
