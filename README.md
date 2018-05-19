@@ -10,7 +10,6 @@ At the end of this tutorial you should have a control plane consisting of:
 
 * a new AWS VPC
 * a bosh director
-* a shared, remote `bbl` state and lock system (S3 & Dynamodb)
 * Concourse CI cluster (optional)
 
 ```bash
