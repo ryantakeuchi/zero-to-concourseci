@@ -10,29 +10,15 @@ At the end of this tutorial you should have a control plane consisting of:
 
 * a new AWS VPC
 * a bosh director
-* Concourse CI cluster (optional)
 * a shared, remote `bbl` state and lock system (S3 & Dynamodb)
+* Concourse CI cluster (optional)
 
-## Install Dependencies
+```bash
+docker run -it --rm --user $(id -u):$(id -g) -v $(pwd):/workspace bbl /bin/bash
+aws configure
+aws s3 ls #should not error
 
-**Linux tested only**
-
-The following should be installed on your local machine:
-
-* [bbl](https://github.com/cloudfoundry/bosh-bootloader/releases)
-* [bosh-cli](https://bosh.io/docs/cli-v2.html)
-* [bosh create-env dependencies](https://bosh.io/docs/cli-v2-install/#additional-dependencies)
-* [terraform](https://www.terraform.io/downloads.html) >= 0.11.0
-* [direnv](https://direnv.net/)
-* an AWS IAM user with admin access
-
-## Prepare the terraform S3 backend
-
-Tune some names in `setup/terraform_s3_backend/terraform_s3_backend_provision.tf` then run:
-* `cd setup/terraform_s3_backend`
-* `terraform init`
-* `terraform plan -out terraform_s3_backend_provision.plan`
-* `terraform apply "terraform_s3_backend_provision.plan"`
+```
 
 ## Create a bbl IAM user
 
@@ -46,27 +32,22 @@ Tune some settings in `setup/iam/terraform_create_iam_users.tf` and then run:
 ## Prepare your environment
 
 ``` bash
-mkdir nonprod
 cp .envrc-example nonprod/.envrc
+# Tune nonprod/.envrc using the new bbl user credentials from above
 cd nonprod
-# ignore direnv at this stage when prompted
-# Tune .envrc using the new bbl user credentials from above
 direnv allow
 ```
-Check that your new aws credentials work and that your terraform backend S3 bucket exists.
+Check this as it should not error.
 
 ``` bash
 aws s3 ls
 ```
 
-`bbl` has the concept of [plan-patches](https://github.com/cloudfoundry/bosh-bootloader/tree/master/plan-patches). This is a way of supplying terraform overrides.   
+`bbl` has the concept of [plan-patches](https://github.com/cloudfoundry/bosh-bootloader/tree/master/plan-patches). This is a way of supplying terraform overrides. Patches belong in `nonprod/terraform`, `nonprod/cloud-config` or `nonprod/vars`  
 
-We will be making use of two of these as examples.  
+We will be making use of one of these as an example.  
 
 ``` bash
-mkdir terraform
-mkdir vars
-cp ../plan-patches/tf-backend-aws/terraform/s3_backend_override.tf terraform/
 cp ../plan-patches/aws-vpc-cidr/aws-vpc-cidr.tfvars vars/
 ```
 **Be sure to tune these files**
@@ -78,7 +59,7 @@ This will build a new VPC, subnets etc.
 * `bbl up`
 
 You should now have a working bosh director in a new VPC.  
-Update your terminal's environment variables that are needed so your environment includes info on the new resources just built.
+Load up your new environment variables.  
 
 `direnv allow`  
 Test you are able to connect to your new bosh director.  
