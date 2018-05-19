@@ -10,10 +10,8 @@ resource "aws_iam_user" "bbl" {
   name = "bosh-bootloader"
 }
 
-# is this your keybase name ?
 resource "aws_iam_access_key" "bbl" {
   user = "${aws_iam_user.bbl.name}"
-  pgp_key = "keybase:aussielunix"
 }
 
 resource "aws_iam_user_policy" "bbl-policy" {
@@ -38,16 +36,6 @@ resource "aws_iam_user_policy" "bbl-policy" {
                 "elasticloadbalancing:*"
             ],
             "Resource": "*"
-        },
-        {
-            "Sid": "VisualEditor1",
-            "Effect": "Allow",
-            "Action": [
-                "dynamodb:PutItem",
-                "dynamodb:DeleteItem",
-                "dynamodb:GetItem"
-            ],
-            "Resource": "arn:aws:dynamodb:ap-southeast-2:*:table/bbl-ops-terraform-state-lock"
         }
     ]
 }
@@ -63,5 +51,5 @@ output "aws_access_key_id" {
 }
 
 output "aws_secret_access_key" {
-  value = "${aws_iam_access_key.bbl.encrypted_secret}"
+  value = "${aws_iam_access_key.bbl.secret}"
 }
