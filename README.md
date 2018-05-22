@@ -97,9 +97,9 @@ Get some downloads from Pivnet and place them in the artifacts directory.
 * grab the latest AWS Stemcell from pivnet and check the sha256
 * upload to director
 ```bash
-  bosh upload-release ../artifacts/concourse-3.8.0.tgz
-  bosh upload-release ../artifacts/garden-runc-1.9.0.tgz
-  bosh upload-stemcell ../artifacts/light-bosh-stemcell-3468.27-aws-xen-hvm-ubuntu-trusty-go_agent.tgz
+  bosh upload-release ../artifacts/concourse-3.9.2.tgz
+  bosh upload-release ../artifacts/garden-runc-1.12.0.tgz
+  bosh upload-stemcell ../artifacts/light-bosh-stemcell-3468.42-aws-xen-hvm-ubuntu-trusty-go_agent.tgz
 ```
 Credentials in credhub are namespaced like `/boshdirectorname/deploymentname/credname`
 * find the bosh directors name
@@ -109,6 +109,15 @@ bbl outputs | grep director_name
 * Generate some basic auth credentials for Concourse in Credhub.
 ```bash
 credhub generate --type user --name /boshdirectorsname/concourse/atc_basic_auth
+```
+* create an ELB for concourse
+  * `bbl plan --lb-type=concourse`
+  * `bbl up`
+* Set the environment variable $external_url to the ELB address (no http/https)
+* clone [concourse bosh deployment](https://github.com/concourse/concourse-bosh-deployment) and checkout the 3.9.2 tag
+```
+git clone git@github.com:concourse/concourse-bosh-deployment.git
+git checkout tags/v3.9.2
 ```
 * Tune `manifests/settings.yml`
 * Deploy concourse
@@ -125,6 +134,7 @@ bosh deploy -d concourse manifests/concourse.yml \
 * retrieve the Concourse credentials and log in.
 ```bash
 credhub get -n /boshdirectorsname/concourse/atc_basic_auth
+fly -t pivotal-pas-pipelines login --concourse-url "http://$external_url"
 ```
 * remember to frequently rotate these credentials
 ```bash
