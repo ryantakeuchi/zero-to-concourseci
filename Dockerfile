@@ -32,8 +32,8 @@ RUN apt-get update \
   zlibc \
   zlib1g-dev \
   && rm -rf /var/lib/apt/lists/*  \
-  && groupadd -g 1100 ubuntu \
-  && useradd -u 1100 -g 1100 -s /bin/bash -d /home/ubuntu -m --no-log-init -r ubuntu
+  && groupadd -g 1001 ubuntu \
+  && useradd -u 1001 -g 1001 -s /bin/bash -d /home/ubuntu -m --no-log-init -r ubuntu
 
 # Install cf-cli
 RUN curl -L "https://cli.run.pivotal.io/stable?release=linux64-binary&source=github" | tar -zx -C /usr/local/bin
@@ -67,7 +67,7 @@ RUN echo '# get direnv up and running' >> /home/ubuntu/.bashrc \
 
 ## Install a minimalist vimrc
 RUN git clone https://github.com/pajuna/vimrc.git /home/ubuntu/.vim \
-  && ln -s /hom/ubuntu/.vim/.vimrc /home/ubuntu/.vimrc
+  && ln -s /home/ubuntu/.vim/.vimrc /home/ubuntu/.vimrc
 
 # Install gcloud
 RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk-trusty main" > /etc/apt/sources.list.d/google-cloud-sdk.list \
