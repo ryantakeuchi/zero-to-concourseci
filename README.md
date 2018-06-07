@@ -12,7 +12,11 @@ At the end of this tutorial you should have a control plane consisting of:
 * a bosh director
 * Concourse CI cluster (optional)
 
+There is a lot of cli tools required for a platform operator. To make this
+easier there is an included Dockerfile.
+
 ```bash
+docker build . -t bbl
 docker run -it --rm --user $(id -u):$(id -g) -v $(pwd):/workspace bbl /bin/bash
 aws configure
 aws s3 ls #should not error
