@@ -12,12 +12,10 @@ At the end of this tutorial you should have a control plane consisting of:
 * a bosh director
 * Concourse CI cluster (optional)
 
-There is a lot of cli tools required for a platform operator. To make this
-easier there is an included Dockerfile.
+There is a lot of cli tools required for a platform operator. To make this easier there is a Docker container, [aussielunix/boshtoolkit](https://hub.docker.com/r/aussielunix/boshtoolkit/), with all the tools required.
 
 ```bash
-docker build . -t bbl
-docker run -it --rm --user $(id -u):$(id -g) -v $(pwd):/workspace bbl /bin/bash
+docker run -it --rm --user $(id -u):$(id -g) -v $(pwd):/workspace aussielunix/boshtoolkit /bin/bash
 aws configure
 aws s3 ls #should not error
 
@@ -89,7 +87,8 @@ Test you are able to connect to your new bosh director.
 .  
 .  
 .  
-.  
+.
+# :FIXME: - This needs to be redone
 
 ## Pivotal Concourse
 
@@ -97,15 +96,15 @@ We are now ready to deploy a Concourse CI to our director.
 Get some downloads from Pivnet and place them in the artifacts directory.
 
 * grab concourse release from pivnet and check the sha256
-* grab garden-runc from pivnet and check the sha256
 * grab the latest AWS Stemcell from pivnet and check the sha256
 * upload to director
 ```bash
-  bosh upload-release ../artifacts/concourse-3.9.2.tgz
-  bosh upload-release ../artifacts/garden-runc-1.12.0.tgz
-  bosh upload-stemcell ../artifacts/light-bosh-stemcell-3468.42-aws-xen-hvm-ubuntu-trusty-go_agent.tgz
+  bosh upload-release ../artifacts/concourse-3.14.0.tgz
+  bosh upload-stemcell ../artifacts/light-bosh-stemcell-3541.**-aws-xen-hvm-ubuntu-trusty-go_agent.tgz
 ```
+
 Credentials in credhub are namespaced like `/boshdirectorname/deploymentname/credname`
+
 * find the bosh directors name
 ```bash
 bbl outputs | grep director_name
@@ -117,11 +116,11 @@ credhub generate --type user --name /boshdirectorsname/concourse/atc_basic_auth
 * create an ELB for concourse
   * `bbl plan --lb-type=concourse`
   * `bbl up`
-* Set the environment variable $external_url to the ELB address (no http/https)
-* clone [concourse bosh deployment](https://github.com/concourse/concourse-bosh-deployment) and checkout the 3.9.2 tag
+* Set the environment variable `$external_url` to the ELB address (no http/https)
+* clone [concourse bosh deployment](https://github.com/concourse/concourse-bosh-deployment) and checkout the 3.14.0 tag
 ```
 git clone git@github.com:concourse/concourse-bosh-deployment.git
-git checkout tags/v3.9.2
+git checkout tags/v3.14.0
 ```
 * Tune `manifests/settings.yml`
 * Deploy concourse
@@ -145,3 +144,4 @@ fly -t pivotal-pas-pipelines login --concourse-url "http://$external_url"
 credhub regenerate --name /boshdirectorsname/concourse/atc_basic_auth
 # and re-deploy concourse with the above bosh deploy...
 ```
+
