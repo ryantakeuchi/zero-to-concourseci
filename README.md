@@ -24,7 +24,7 @@ aws s3 ls #should not error
 ## Create a bbl IAM user
 
 Tune some settings in `setup/iam/terraform_create_iam_users.tf` and then run:
-* `cd setup/iam`
+* `cd /workspace/setup/iam`
 * `terraform init`
 * `terraform plan -out iam.plan`
 * `terraform apply 'iam.plan'`
@@ -32,9 +32,9 @@ Tune some settings in `setup/iam/terraform_create_iam_users.tf` and then run:
 ## Prepare your environment
 
 ``` bash
-cp .envrc-example nonprod/.envrc
+cd /workspace/nonprod/
+cp .envrc-example .envrc
 # Tune nonprod/.envrc using the new bbl user credentials from above
-cd nonprod
 direnv allow
 ```
 Check this as it should not error.
@@ -63,43 +63,30 @@ Load up your new environment variables.
 
 `direnv allow`  
 Test you are able to connect to your new bosh director.  
-`bosh env`
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.  
-.
-# :FIXME: - This needs to be redone
+`bosh env`  
 
 ## Pivotal Concourse
 
 We are now ready to deploy a Concourse CI to our director.  
-Get some downloads from Pivnet and place them in the artifacts directory.
+Get some downloads from Pivnet and place them in the `artifacts/` directory.
 
-* grab concourse release from pivnet and check the sha256
-* grab the latest AWS Stemcell from pivnet and check the sha256
-* upload to director
+* cd ../artifacts/
+* `pivnet login --api-token='my-api-token'`
+* Download the ConcourseCI release from pivnet
+  * `pivnet releases -p p-concourse` # note the latest version
+  * `pivnet product-files -p p-concourse -r 3.13.0` # take note of the id's of the files
+  * `pivnet download-product-files -p p-concourse -r 3.13.0 -i 151940`
+* Download garden-runC release from pivnet
+  * `pivnet download-product-files -p p-concourse -r 3.13.0 -i 151948`
+* Download a compatible stemcell from pivnet
+  * `pivnet releases -p stemcells`
+  * `pivent product-files -p stemcells -r 3541.34`
+  * `pivnet download-product-files -p stemcells -r 3541.34 -i 161596`
+* upload these to your new bosh director
 ```bash
-  bosh upload-release ../artifacts/concourse-3.14.0.tgz
+  cd ../nonprod
+  bosh upload-release ../artifacts/concourse-3.13.0.tgz
+  bosh upload-release ../artifacts/garden-runc-release-1.13.1.tgz
   bosh upload-stemcell ../artifacts/light-bosh-stemcell-3541.**-aws-xen-hvm-ubuntu-trusty-go_agent.tgz
 ```
 
@@ -111,37 +98,40 @@ bbl outputs | grep director_name
 ```
 * Generate some basic auth credentials for Concourse in Credhub.
 ```bash
-credhub generate --type user --name /boshdirectorsname/concourse/atc_basic_auth
+credhub generate --type user --username admin --name /boshdirectorsname/controlplane/atc_basic_auth
 ```
 * create an ELB for concourse
   * `bbl plan --lb-type=concourse`
   * `bbl up`
-* Set the environment variable `$external_url` to the ELB address (no http/https)
 * clone [concourse bosh deployment](https://github.com/concourse/concourse-bosh-deployment) and checkout the 3.14.0 tag
 ```
-git clone git@github.com:concourse/concourse-bosh-deployment.git
-git checkout tags/v3.14.0
+cd ../
+git clone https://github.com/concourse/concourse-bosh-deployment
+cd concourse-bosh-deployment
+git checkout tags/v3.13.0
+cd ../nonprod
 ```
-* Tune `manifests/settings.yml`
-* Deploy concourse
+* Tune `concourse/settings.yml`
+* Deploy a concourse cluster
 ```bash
-bosh deploy -d concourse manifests/concourse.yml \
-  -l manifests/versions.yml \
-  --vars-store=cluster-creds.yml \
-  --vars-file=manifests/settings.yml \
-  -o manifests/operations/privileged-http.yml \
-  -o manifests/operations/basic-auth.yml \
-  -o manifests/operations/web-network-extension.yml \
-  -o manifests/operations/worker-ephemeral-disk.yml
+bosh deploy -d controlplane \
+	../concourse-bosh-deployment/cluster/concourse.yml \
+	-l ../concourse-bosh-deployment/versions.yml \
+	--vars-store=cluster-cres.yml \
+	--vars-file=concourse/settings.yml \
+	-o ../concourse-bosh-deployment/cluster/operations/privileged-http.yml \
+	-o ../concourse-bosh-deployment/cluster/operations/basic-auth.yml \
+	-o ../concourse-bosh-deployment/cluster/operations/web-network-extension.yml \
+	-o ../concourse-bosh-deployment/cluster/operations/worker-ephemeral-disk.yml
 ```
 * retrieve the Concourse credentials and log in.
 ```bash
-credhub get -n /boshdirectorsname/concourse/atc_basic_auth
+credhub get -n /boshdirectorsname/controlplane/atc_basic_auth
 fly -t pivotal-pas-pipelines login --concourse-url "http://$external_url"
 ```
 * remember to frequently rotate these credentials
 ```bash
-credhub regenerate --name /boshdirectorsname/concourse/atc_basic_auth
+credhub regenerate --name /boshdirectorsname/controlplane/atc_basic_auth
 # and re-deploy concourse with the above bosh deploy...
 ```
 
