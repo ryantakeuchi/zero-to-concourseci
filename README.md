@@ -71,7 +71,7 @@ Test you are able to connect to your new bosh director.
 We are now ready to deploy a Concourse CI to our director.  
 Get some downloads from Pivnet and place them in the `artifacts/` directory.
 
-* cd ../artifacts/
+* `cd ../artifacts/`
 * `pivnet login --api-token='my-api-token'`
 * Download the ConcourseCI release from pivnet
   * `pivnet releases -p p-concourse` # note the latest version
