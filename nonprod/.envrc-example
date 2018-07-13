@@ -19,3 +19,11 @@ if [[ -e 'bbl-state.json' ]]
 then
   eval "$(bbl print-env)"
 fi
+
+## concourse LB
+#
+if [[ -n $(bbl lbs) ]]
+then
+  export external_url="$(bbl lbs |awk -F':' '{print $2}' |sed 's/ //' | awk '{ print $2}' | awk -F '[\[\]]' '{print $2}')"
+fi
+
