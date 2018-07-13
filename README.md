@@ -113,16 +113,16 @@ cd ../nonprod
 ```
 * Tune `concourse/settings.yml`
 * Deploy a concourse cluster
-```bash
+``` bash
 bosh deploy -d controlplane \
-	../concourse-bosh-deployment/cluster/concourse.yml \
-	-l ../concourse-bosh-deployment/versions.yml \
-	--vars-store=cluster-cres.yml \
-	--vars-file=concourse/settings.yml \
-	-o ../concourse-bosh-deployment/cluster/operations/privileged-http.yml \
-	-o ../concourse-bosh-deployment/cluster/operations/basic-auth.yml \
-	-o ../concourse-bosh-deployment/cluster/operations/web-network-extension.yml \
-	-o ../concourse-bosh-deployment/cluster/operations/worker-ephemeral-disk.yml
+  ../concourse-bosh-deployment/cluster/concourse.yml \
+  -l ../concourse-bosh-deployment/versions.yml \
+  --vars-store=cluster-cres.yml \
+  --vars-file=concourse/settings.yml \
+  -o ../concourse-bosh-deployment/cluster/operations/privileged-http.yml \
+  -o ../concourse-bosh-deployment/cluster/operations/basic-auth.yml \
+  -o ../concourse-bosh-deployment/cluster/operations/web-network-extension.yml \
+  -o ../concourse-bosh-deployment/cluster/operations/worker-ephemeral-disk.yml
 ```
 * retrieve the Concourse credentials and log in.
 ```bash
