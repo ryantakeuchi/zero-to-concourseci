@@ -14,6 +14,7 @@ At the end of this tutorial you should have a control plane consisting of:
 
 There is a lot of cli tools required for a platform operator. To make this easier there is a Docker container, [aussielunix/boshtoolkit](https://hub.docker.com/r/aussielunix/boshtoolkit/), with all the tools required.
 
+* Startup the Docker container and configure the aws cli with some (temporary) admin IAM credentials.
 ```bash
 docker run -it --rm --user $(id -u):$(id -g) -v $(pwd):/workspace aussielunix/boshtoolkit /bin/bash
 aws configure
@@ -34,7 +35,7 @@ Tune some settings in `setup/iam/terraform_create_iam_users.tf` and then run:
 ``` bash
 cd /workspace/nonprod/
 cp .envrc-example .envrc
-# Tune nonprod/.envrc using the new bbl user credentials from above
+# Tune .envrc using the new bbl user credentials from above
 direnv allow
 ```
 Check this as it should not error.
