@@ -76,6 +76,6 @@ RUN echo "deb https://packages.cloud.google.com/apt cloud-sdk-trusty main" > /et
   && apt-get -qqy install google-cloud-sdk
 
 # Install a basic gitconfig
-COPY .gitconfig /home/ubuntu
+#COPY .gitconfig /home/ubuntu
 
 WORKDIR /home/ubuntu
